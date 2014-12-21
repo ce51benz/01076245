@@ -1,0 +1,35 @@
+Library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.STD_LOGIC_UNSIGNED.all;
+
+entity SEVENSEG_CONTROLLER is
+	port(SEL:in STD_LOGIC_VECTOR(1 downto 0);
+		  H1,H2,M1,M2:in STD_LOGIC_VECTOR(3 downto 0);
+		  COM:out STD_LOGIC_VECTOR(3 downto 0);
+		  Y:out STD_LOGIC_VECTOR(6 downto 0));
+end SEVENSEG_CONTROLLER;
+
+
+architecture Behaviorual of SEVENSEG_CONTROLLER is
+	COMPONENT COMMON_DECODER
+	port(SEL:in STD_LOGIC_VECTOR(1 downto 0);
+	     COM:out STD_LOGIC_VECTOR(3 downto 0));
+   end COMPONENT;
+	
+	COMPONENT OUTPUT_7SEGMUX
+	port(SEL:in STD_LOGIC_VECTOR(1 downto 0);
+		  H1,H2,M1,M2:in STD_LOGIC_VECTOR(3 downto 0);
+	     NUMOUT:out STD_LOGIC_VECTOR(3 downto 0));
+	end COMPONENT;
+	
+	COMPONENT BCDTO7SEG
+	port(NUMOUT:in STD_LOGIC_VECTOR(3 downto 0);
+	     Y:out STD_LOGIC_VECTOR(6 downto 0));
+	end COMPONENT;
+
+	signal NUMOUT:STD_LOGIC_VECTOR(3 downto 0);
+begin
+	COMMONDECODER:COMMON_DECODER port map(SEL,COM);
+	OUTPUT7SEGMUX:OUTPUT_7SEGMUX port map(SEL,H1,H2,M1,M2,NUMOUT);
+	BCDTO7SEGMENT:BCDTO7SEG port map(NUMOUT,Y);
+end Behaviorual;
